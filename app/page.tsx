@@ -73,7 +73,7 @@ const AuthForm = () => {
         >
           <label
             htmlFor={field.name}
-            className="block text-sm font-medium text-gray-700"
+            className="block text-sm font-medium text-slate-300"
           >
             {field.label}
           </label>
@@ -88,9 +88,10 @@ const AuthForm = () => {
                   : field.type
               }
               id={field.name}
-              className={`mt-1 block w-full rounded-md border ${
-                errors[field.name] ? "border-red-500" : "border-gray-300"
-              } shadow-sm p-2 focus:border-blue-500`}
+              className={`mt-1 block w-full rounded-md bg-slate-800 border 
+                ${errors[field.name] ? "border-red-500" : "border-slate-700"} 
+                shadow-sm p-2 text-white placeholder-slate-400
+                focus:border-blue-500 focus:ring-1 focus:ring-blue-500`}
             />
             {field.name === "password" && (
               <div className="absolute right-3 inset-y-0 flex justify-center items-center">
@@ -99,7 +100,7 @@ const AuthForm = () => {
                   whileTap={{ scale: 0.95 }}
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="text-gray-500 hover:text-gray-700 focus:outline-none"
+                  className="text-slate-400 hover:text-slate-300 focus:outline-none"
                 >
                   {showPassword ? (
                     <EyeOff className="h-5 w-5" />
@@ -117,7 +118,7 @@ const AuthForm = () => {
                 animate={{ opacity: 1, height: "auto" }}
                 exit={{ opacity: 0, height: 0 }}
                 transition={{ duration: 0.2 }}
-                className="mt-1 text-sm text-red-600"
+                className="mt-1 text-sm text-red-400"
               >
                 {errors[field.name]?.message}
               </motion.p>
@@ -131,7 +132,11 @@ const AuthForm = () => {
         whileTap={{ scale: 0.98 }}
         type="submit"
         disabled={isSubmitting}
-        className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="w-full flex justify-center py-2 px-4 border border-transparent 
+          rounded-md shadow-sm text-sm font-medium text-white 
+          bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 
+          focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 
+          disabled:cursor-not-allowed focus:ring-offset-slate-900"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.6 }}
@@ -145,7 +150,7 @@ const AuthForm = () => {
           whileTap={{ scale: 0.95 }}
           type="button"
           onClick={() => setIsLogin(!isLogin)}
-          className="text-sm text-blue-600 hover:text-blue-700 focus:outline-none"
+          className="text-sm text-blue-400 hover:text-blue-300 focus:outline-none"
         >
           {isLogin ? "Need an account? Sign up" : "Already have an account? Login"}
         </motion.button>
@@ -154,13 +159,13 @@ const AuthForm = () => {
   );
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+    <div className="flex items-center justify-center min-h-screen bg-slate-900">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <Card className="w-full max-w-md p-6 bg-white">
+        <Card className="w-full max-w-md p-6 bg-slate-800 border-slate-700">
           <CardHeader>
             <motion.div
               key={isLogin ? "login" : "signup"}
@@ -169,7 +174,7 @@ const AuthForm = () => {
               exit={{ opacity: 0, y: 20 }}
               transition={{ duration: 0.3 }}
             >
-              <CardTitle className="text-2xl font-bold text-center">
+              <CardTitle className="text-2xl font-bold text-center text-white">
                 {isLogin ? "Login" : "Sign up"}
               </CardTitle>
             </motion.div>
