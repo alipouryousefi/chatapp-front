@@ -1,113 +1,210 @@
-import Image from "next/image";
+"use client";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { LoginFormValues, loginSchema } from "@/validation";
+import { Eye, EyeOff } from "lucide-react";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
-export default function Home() {
-  return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:size-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+const AuthForm = () => {
+  const [isLogin, setIsLogin] = useState(true);
+  const [showPassword, setShowPassword] = useState(false);
+
+  const {
+    register: registerLogin,
+    handleSubmit: handleLoginSubmit,
+    formState: { errors: loginErrors, isSubmitting: isLoginSubmitting },
+  } = useForm<LoginFormValues>({
+    resolver: zodResolver(loginSchema),
+  });
+
+  const {
+    register: registerSignup,
+    handleSubmit: handleSignupSubmit,
+    formState: { errors: signupErrors, isSubmitting: isSignupSubmitting },
+  } = useForm<LoginFormValues>({
+    resolver: zodResolver(loginSchema),
+  });
+
+  const onLogin = async (data: LoginFormValues) => {
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      console.log("Login submitted:", data);
+    } catch (error) {
+      console.error("Login failed:", error);
+    }
+  };
+
+  const onSignup = async (data: LoginFormValues) => {
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      console.log("Signup submitted:", data);
+    } catch (error) {
+      console.error("Signup failed:", error);
+    }
+  };
+
+  const loginFields = [
+    { name: "email", label: "Email", type: "email" },
+    { name: "password", label: "Password", type: "password" },
+  ];
+
+  const signupFields = [
+    { name: "username", label: "Username", type: "text" },
+    { name: "email", label: "Email", type: "email" },
+    { name: "password", label: "Password", type: "password" },
+  ];
+
+  const renderForm = (
+    fields: typeof loginFields,
+    register: any,
+    errors: any,
+    isSubmitting: boolean,
+    onSubmit: any
+  ) => (
+    <form onSubmit={onSubmit} className="space-y-4">
+      {fields.map((field, index) => (
+        <motion.div
+          key={field.name}
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: index * 0.1 + 0.3 }}
+        >
+          <label
+            htmlFor={field.name}
+            className="block text-sm font-medium text-gray-700"
           >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
+            {field.label}
+          </label>
+          <div className="relative">
+            <input
+              {...register(field.name)}
+              type={
+                field.name === "password"
+                  ? showPassword
+                    ? "text"
+                    : "password"
+                  : field.type
+              }
+              id={field.name}
+              className={`mt-1 block w-full rounded-md border ${
+                errors[field.name] ? "border-red-500" : "border-gray-300"
+              } shadow-sm p-2 focus:border-blue-500`}
             />
-          </a>
-        </div>
+            {field.name === "password" && (
+              <div className="absolute right-3 inset-y-0 flex justify-center items-center">
+                <motion.button
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="text-gray-500 hover:text-gray-700 focus:outline-none"
+                >
+                  {showPassword ? (
+                    <EyeOff className="h-5 w-5" />
+                  ) : (
+                    <Eye className="h-5 w-5" />
+                  )}
+                </motion.button>
+              </div>
+            )}
+          </div>
+          <AnimatePresence mode="wait">
+            {errors[field.name] && (
+              <motion.p
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.2 }}
+                className="mt-1 text-sm text-red-600"
+              >
+                {errors[field.name]?.message}
+              </motion.p>
+            )}
+          </AnimatePresence>
+        </motion.div>
+      ))}
+
+      <motion.button
+        whileHover={{ scale: 1.02 }}
+        whileTap={{ scale: 0.98 }}
+        type="submit"
+        disabled={isSubmitting}
+        className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.6 }}
+      >
+        {isSubmitting ? (isLogin ? "Logging in..." : "Signing up...") : (isLogin ? "Login" : "Sign up")}
+      </motion.button>
+
+      <div className="text-center mt-4">
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          type="button"
+          onClick={() => setIsLogin(!isLogin)}
+          className="text-sm text-blue-600 hover:text-blue-700 focus:outline-none"
+        >
+          {isLogin ? "Need an account? Sign up" : "Already have an account? Login"}
+        </motion.button>
       </div>
-
-      <div className="relative z-[-1] flex place-items-center before:absolute before:h-[300px] before:w-full before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-full after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 sm:before:w-[480px] sm:after:w-[240px] before:lg:h-[360px]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className="mb-32 grid text-center lg:mb-0 lg:w-full lg:max-w-5xl lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Docs{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Learn{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Templates{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Explore starter templates for Next.js.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Deploy{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-balance text-sm opacity-50">
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+    </form>
   );
-}
+
+  return (
+    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <Card className="w-full max-w-md p-6 bg-white">
+          <CardHeader>
+            <motion.div
+              key={isLogin ? "login" : "signup"}
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              transition={{ duration: 0.3 }}
+            >
+              <CardTitle className="text-2xl font-bold text-center">
+                {isLogin ? "Login" : "Sign up"}
+              </CardTitle>
+            </motion.div>
+          </CardHeader>
+          <CardContent>
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={isLogin ? "login" : "signup"}
+                initial={{ opacity: 0, x: isLogin ? -100 : 100 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: isLogin ? 100 : -100 }}
+                transition={{ duration: 0.3 }}
+              >
+                {isLogin
+                  ? renderForm(
+                      loginFields,
+                      registerLogin,
+                      loginErrors,
+                      isLoginSubmitting,
+                      handleLoginSubmit(onLogin)
+                    )
+                  : renderForm(
+                      signupFields,
+                      registerSignup,
+                      signupErrors,
+                      isSignupSubmitting,
+                      handleSignupSubmit(onSignup)
+                    )}
+              </motion.div>
+            </AnimatePresence>
+          </CardContent>
+        </Card>
+      </motion.div>
+    </div>
+  );
+};
+
+export default AuthForm;
