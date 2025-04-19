@@ -8,6 +8,9 @@ import { RouterProvider } from "react-router-dom";
 import router from "./components/Routes";
 import { ApolloProvider } from "@apollo/client";
 import client from "./constants/apollo-client";
+import Guard from "./components/auth/Guard";
+import Header from "./components/Header";
+import Snackbar from "./components/Snackbar";
 
 const darkTheme = createTheme({
   palette: {
@@ -20,9 +23,13 @@ const App = () => {
     <ApolloProvider client={client}>
       <ThemeProvider theme={darkTheme}>
         <CssBaseline />
+        <Header />
         <Container>
-          <RouterProvider router={router} />
+          <Guard>
+            <RouterProvider router={router} />
+          </Guard>
         </Container>
+        <Snackbar />
       </ThemeProvider>
     </ApolloProvider>
   );
