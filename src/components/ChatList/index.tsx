@@ -15,7 +15,7 @@ const ChatList = () => {
         open={chatListAddVisible}
         handleClose={() => setChatListAddVisible(false)}
       />
-      <Stack sx={{ height: "100vh", width: "100%" }}>
+      <Stack sx={{ height: "100%", width: "100%" }}>
         <ChatListHeader
           handleAddChat={() => {
             setChatListAddVisible(true);
@@ -26,12 +26,12 @@ const ChatList = () => {
           sx={{
             width: "100%",
             bgcolor: "background.paper",
-            //   maxHeight: "80vh",
+              maxHeight: "84vh",
             overflow: "auto",
           }}
         >
           {data?.chats.map((chat: any) => (
-            <ChatListItem key={chat.id} name={chat?.name} />
+            <ChatListItem key={chat.id} chat={chat} />
           ))}
         </List>
       </Stack>

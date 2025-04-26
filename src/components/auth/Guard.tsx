@@ -26,11 +26,11 @@ const Guard = ({ children }: GuardProps) => {
     }
   }, [error]);
   return (
-    <>
+    <div style={{maxHeight:"90vh"}}>
       {excludedRoutes.includes(path)
         ? children
         : user && children}
-    </>
+    </div>
   );
 };
 
