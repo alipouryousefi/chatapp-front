@@ -7,10 +7,11 @@ interface AuthProps {
   submitLabel: string;
   onSubmit: (credentials: { email: string; password: string }) => Promise<void>;
   children: React.ReactNode;
+  extraField?: React.ReactNode[];
   error?: string;
 }
 
-const Auth = ({ onSubmit, submitLabel, children, error }: AuthProps) => {
+const Auth = ({ onSubmit, submitLabel, children, error,extraField }: AuthProps) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { data } = useGetMe();
@@ -27,10 +28,7 @@ const Auth = ({ onSubmit, submitLabel, children, error }: AuthProps) => {
       spacing={3}
       sx={{
         height: "100vh",
-        maxWidth: {
-          xs: "70%",
-          md: "30%",
-        },
+        maxWidth: "360px",
         margin: "0 auto",
         justifyContent: "center",
       }}
@@ -46,6 +44,7 @@ const Auth = ({ onSubmit, submitLabel, children, error }: AuthProps) => {
         error={!!error}
         helperText={error}
       />
+      {extraField}
       <TextField
         type="password"
         label="Password"

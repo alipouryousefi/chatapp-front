@@ -34,7 +34,6 @@ const ChatList = () => {
         <Divider />
         <List
           sx={{
-            width: "100%",
             bgcolor: "background.paper",
             maxHeight: "84vh",
             overflow: "auto",

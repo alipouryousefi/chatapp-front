@@ -27,24 +27,26 @@ const App = () => {
 
   const showChatList = path === "/" || path.includes("chat");
   return (
-    <Box sx={{ maxHeight: "100vh"}}>
+    <Box sx={{ maxHeight: "100vh" }}>
       <ApolloProvider client={client}>
         <ThemeProvider theme={darkTheme}>
           <CssBaseline />
           <Header />
           <Guard>
-            {showChatList ? (
-              <Grid container>
-                <Grid size={{ md: 3 }}>
-                  <ChatList />
+            <Container maxWidth="xl" sx={{ marginTop: "1rem" }}>
+              {showChatList ? (
+                <Grid container spacing={5}>
+                  <Grid size={{ xs: 12, md: 5, lg: 4, xl: 3 }}>
+                    <ChatList />
+                  </Grid>
+                  <Grid size={{ xs: 12, md: 7, lg: 8, xl: 9 }}>
+                    <Routes />
+                  </Grid>
                 </Grid>
-                <Grid size={{ md: 9 }}>
-                  <Routes />
-                </Grid>
-              </Grid>
-            ) : (
-              <Routes />
-            )}
+              ) : (
+                <Routes />
+              )}
+            </Container>
           </Guard>
           <Snackbar />
         </ThemeProvider>
@@ -56,9 +58,5 @@ const App = () => {
 export default App;
 
 const Routes = () => {
-  return (
-    <Container sx={{ height: "100%" }}>
-      <RouterProvider router={router} />
-    </Container>
-  );
+  return <RouterProvider router={router} />;
 };
